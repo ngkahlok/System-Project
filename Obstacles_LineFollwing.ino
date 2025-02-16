@@ -221,7 +221,7 @@ void checkSide()
   delay(100);
 
  for (int angle = 70; angle <= 140; angle += 5)  {
-    // servoPulse(servo, angle);  
+     
     myServo.write(angle);
   }
   delay(1000);
@@ -231,7 +231,7 @@ void checkSide()
   delay(100);
 
   for (int angle = 140; angle >= 0; angle -= 5)  {
-    // servoPulse(servo, angle); 
+    
     myServo.write(angle);
   }
   delay(1000);
@@ -241,7 +241,7 @@ void checkSide()
   delay(100);
 
  for (int angle = 0; angle <= 70; angle += 5)  {
-    // servoPulse(servo, angle);  
+      
     myServo.write(angle);
   }
 
@@ -249,12 +249,5 @@ void checkSide()
   compareDistance();
 }
 
-// void servoPulse (int pin, int angle){
-//   int pwm = (angle*11) + 500;      // Convert angle to microseconds
-//  digitalWrite(pin, HIGH);
-//  delayMicroseconds(pwm);
-//  digitalWrite(pin, LOW);
-//  delay(50); // Refresh cycle of servo
-// }
 
 
