@@ -190,29 +190,29 @@ long ultrasonicRead(){
 
 void compareDistance(){
   if(distance_L > distance_R){
-    turnLeft(105,70);
+    turnLeft(93,47);
     delay(500);
     moveForward(70,70);
     delay(600);
-    turnRight(70,105);
+    turnRight(47,93);
     delay(500);
     moveForward(70,70);
     delay(600);
-    turnRight(70,105);
+    turnRight(47,93);
     delay(600);
     moveForward(70,70);
     delay(400);
   }
   else{
-    turnRight(70,105);
+    turnRight(47,93);
     delay(500);
     moveForward(70,70);
     delay(600);
-    turnLeft(105,70);
+    turnLeft(93,47);
     delay(500);
     moveForward(70,70);
     delay(600);  
-    turnLeft(105,70);
+    turnLeft(93,47);
     delay(600);
     moveForward(70,70);
     delay(400);
