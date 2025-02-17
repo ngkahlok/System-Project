@@ -11,7 +11,6 @@ const int TRIG = 11;
 const int ECHO = 12;
 Servo myServo;
 
-
 const int IrLeftSensor = 8;
 const int IrRightSensor = 9;
 const int IrCenterSensor = 10;
@@ -70,15 +69,15 @@ void loop() {
 
   if(distanceFromObstacles > maxDistanceFromObstacles){
     if (left == 0 && center == 1 && right == 0) {
-        moveForward(); // Robot is centered on the line
+        moveForward(rightMotorSpeed,leftMotorSpeed); // Robot is centered on the line
     } else if (left == 1 && center == 1 && right == 0) {
-        turnLeft(); // Slightly right of the line
+        turnLeft(rightMotorSpeed,leftMotorSpeed); // Slightly right of the line
     } else if (left == 0 && center == 1 && right == 1) {
-        turnRight(); // Slightly left of the line
+        turnRight(rightMotorSpeed,leftMotorSpeed); // Slightly left of the line
     } else if (left == 1 && center == 0 && right == 0) {
-        turnLeft(); // Far right
+        turnLeft(rightMotorSpeed,leftMotorSpeed); // Far right
     } else if (left == 0 && center == 0 && right == 1) {
-        turnRight(); // Far left
+        turnRight(rightMotorSpeed,leftMotorSpeed); // Far left
     } else if (left == 0 && center == 0 && right == 0) {
         reverse();
     }
@@ -125,47 +124,47 @@ void PID(int left, int center, int right) {
     delay(10); // Short delay to stabilize readings
 }
 
-void moveForward() {
+void moveForward(int rightSpeed, int leftSpeed) {
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
   
-  analogWrite(ENA, rightMotorSpeed);
-  analogWrite(ENB, leftMotorSpeed);
+  analogWrite(ENA, rightSpeed);
+  analogWrite(ENB, leftSpeed);
   delay(10);
 }
 
-void reverse() {
+void reverse(int rightSpeed, int leftSpeed) {
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
   
-  analogWrite(ENA, rightMotorSpeed);
-  analogWrite(ENB, leftMotorSpeed);
+  analogWrite(ENA, rightSpeed);
+  analogWrite(ENB, leftSpeed);
   delay(10);
 }
 
-void turnLeft() {
+void turnLeft(int rightSpeed, int leftSpeed) {
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
   
-  analogWrite(ENA, rightMotorSpeed);
-  analogWrite(ENB, leftMotorSpeed);
+  analogWrite(ENA, rightSpeed);
+  analogWrite(ENB, leftSpeed);
   delay(10);
 }
 
-void turnRight() {
+void turnRight(int rightSpeed, int leftSpeed) {
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
   
-  analogWrite(ENA, rightMotorSpeed);
-  analogWrite(ENB, leftMotorSpeed);
+  analogWrite(ENA, rightSpeed);
+  analogWrite(ENB, leftSpeed);
   delay(10);
 }
 
@@ -191,27 +190,31 @@ long ultrasonicRead(){
 
 void compareDistance(){
   if(distance_L > distance_R){
-    turnLeft();
+    turnLeft(105,70);
     delay(500);
-    moveForward();
+    moveForward(70,70);
     delay(600);
-    turnRight();
+    turnRight(70,105);
     delay(500);
-    moveForward();
+    moveForward(70,70);
     delay(600);
-    turnRight();
+    turnRight(70,105);
+    delay(600);
+    moveForward(70,70);
     delay(400);
   }
   else{
-    turnRight();
+    turnRight(70,105);
     delay(500);
-    moveForward();
+    moveForward(70,70);
     delay(600);
-    turnLeft();
+    turnLeft(105,70);
     delay(500);
-    moveForward();
+    moveForward(70,70);
     delay(600);  
-    turnLeft();
+    turnLeft(105,70);
+    delay(600);
+    moveForward(70,70);
     delay(400);
   }
 }
@@ -223,26 +226,29 @@ void checkSide()
  for (int angle = 70; angle <= 140; angle += 5)  {
      
     myServo.write(angle);
+    delay(50);
   }
   delay(1000);
   distance_R = ultrasonicRead();
-  Serial.print("D R=");
-  Serial.println(distance_R);
+  Serial.print("D L=");
+  Serial.println(distance_L);
   delay(100);
 
   for (int angle = 140; angle >= 0; angle -= 5)  {
     
     myServo.write(angle);
+    delay(50);
   }
   delay(1000);
   distance_L = ultrasonicRead();
-  Serial.print("D L=");
-  Serial.println(distance_L);
+  Serial.print("D R=");
+  Serial.println(distance_R);
   delay(100);
 
  for (int angle = 0; angle <= 70; angle += 5)  {
       
     myServo.write(angle);
+    delay(50);
   }
 
   delay(300);
