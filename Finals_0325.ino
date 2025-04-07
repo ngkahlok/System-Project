@@ -69,9 +69,9 @@ const int IrRightSensor = 9;
 const int IrCenterSensor = 10;
 
 // PID constants
-float Kp = 1;   // Proportional gain
+float Kp = 1.04;   // Proportional gain
 float Ki = 0.0;   // Integral gain (set to 0 initially)
-float Kd = 0.5;   // Derivative gain
+float Kd = 0.52;   // Derivative gain
 
 // Variables for PID control
 float error = 0;              // Current error
@@ -79,7 +79,7 @@ float lastError = 0;          // Previous error (for derivative)
 float integral = 0;           // Cumulative error (for integral)
 
 // Motor speed variables
-int baseSpeed = 75;          // Base speed of the motors
+int baseSpeed = 78;          // Base speed of the motors
 int leftMotorSpeed;
 int rightMotorSpeed;
 
@@ -260,19 +260,19 @@ void loop() {
           if(compartmentFilled[i]==true){
             switch(i){
               case 0:
-                colourDicsForDrop('R');
+                colourDics('R');
                 break;
               case 1:
-                colourDicsForDrop('B');
+                colourDics('B');
                 break;
               case 2:
-                colourDicsForDrop('Y');
+                colourDics('Y');
                 break;
               case 3:
-                colourDicsForDrop('W');
+                colourDics('W');
                 break;
               case 4:
-                colourDicsForDrop('H');
+                colourDics('H');
                 break;
               default:
                 return; 
@@ -282,6 +282,7 @@ void loop() {
             compartmentFilled[i] = false; //Set back to false after droped off
           }
         }
+         lcdPrint("Bin Disposed");
       }
       delay(1000);
       do{
@@ -572,6 +573,8 @@ void disposeBin(){
   // delay(1000);
   // moveWithDelay(RIGHT_SERVO, 0); // Move right servo to 135°
   // delay(1000);
+  moveWithDelay(CLAW_SERVO, 160);   // Open claw slightly
+  delay(1000);
   moveWithDelay(BASE_SERVO, 95);
   delay(1000);
   moveWithDelay(RIGHT_SERVO, -40);  // Move left servo to 45°
@@ -590,7 +593,7 @@ void disposeBin(){
   delay(1000);
   moveWithDelay(LEFT_SERVO, 20);  // Move left servo to 45°
   delay(1000);
-  moveWithDelay(CLAW_SERVO, 165);   // Open claw slightly
+  moveWithDelay(CLAW_SERVO, 160);   // Open claw slightly
   delay(1000);
   moveWithDelay(LEFT_SERVO, 60); // Move right servo to 135°
   delay(1000);
@@ -661,7 +664,7 @@ void colourDics(char colour){
   // int delayTime = 10000;  // Time to wait at each section (2 seconds)
 
   if(index!=6){
-    stepperMotor.step(ceil(stepsPerSection * sectionDifference)+45); //Given that it is starting fro initial position
+    stepperMotor.step(ceil(stepsPerSection * sectionDifference)+30); //Given that it is starting fro initial position
   }else{
     stepperMotor.step(ceil(stepsPerSection * sectionDifference));
   }
@@ -702,7 +705,7 @@ void colourDicsForDrop(char colour){
   float stepsPerSection = STEPS_PER_REV / SECTIONS;  // Steps for each 1/6 turn
   // int delayTime = 10000;  // Time to wait at each section (2 seconds)
   if(index!=6){
-    stepperMotor.step(ceil(stepsPerSection * sectionDifference)+55); //Given that it is starting fro initial position
+    stepperMotor.step(ceil(stepsPerSection * sectionDifference)+30); //Given that it is starting fro initial position
   }else{
     stepperMotor.step(ceil(stepsPerSection * sectionDifference));
   }
@@ -821,9 +824,11 @@ void AvoidanceRight(){
     do{
        moveForward();
        delay(10); 
-    }while(digitalRead(IrLeftSensor) == 0 && 
+    }while((digitalRead(IrLeftSensor) == 0 && 
        digitalRead(IrCenterSensor) == 0 && 
-      digitalRead(IrRightSensor) == 0);
+      digitalRead(IrRightSensor) == 0)||(digitalRead(IrLeftSensor) == 1 && 
+       digitalRead(IrCenterSensor) == 0 && 
+      digitalRead(IrRightSensor) == 0));
 
     // for(int left = 0; left < 3; left ++){
     //   turnRightAvoid(85,85);
@@ -836,9 +841,8 @@ void AvoidanceRight(){
        digitalRead(IrCenterSensor) == 1 && 
       digitalRead(IrRightSensor) == 0)||(digitalRead(IrLeftSensor) == 1 && 
        digitalRead(IrCenterSensor) == 1 && 
-      digitalRead(IrRightSensor) == 1)||(digitalRead(IrLeftSensor) == 1 && 
-       digitalRead(IrCenterSensor) == 0 && 
-      digitalRead(IrRightSensor) == 0));
+      digitalRead(IrRightSensor) == 1));
+
 
     // for(int left = 0; left < 1; left ++){
     //   turnLeftAvoid(85,85);
@@ -875,9 +879,11 @@ void AvoidanceLeft(){
     do{
        moveForward();
        delay(10); 
-    }while(digitalRead(IrLeftSensor) == 0 && 
+    }while((digitalRead(IrLeftSensor) == 0 && 
        digitalRead(IrCenterSensor) == 0 && 
-      digitalRead(IrRightSensor) == 0);
+      digitalRead(IrRightSensor) == 0)||(digitalRead(IrLeftSensor) == 0 && 
+       digitalRead(IrCenterSensor) == 0 && 
+      digitalRead(IrRightSensor) == 1));
 
     do{
         turnLeftAvoid(90,90);
@@ -886,8 +892,6 @@ void AvoidanceLeft(){
        digitalRead(IrCenterSensor) == 1 && 
       digitalRead(IrRightSensor) == 1)||(digitalRead(IrLeftSensor) == 1 && 
        digitalRead(IrCenterSensor) == 1 && 
-      digitalRead(IrRightSensor) == 1)||(digitalRead(IrLeftSensor) == 0 && 
-       digitalRead(IrCenterSensor) == 0 && 
       digitalRead(IrRightSensor) == 1));
     // for(int left = 0; left < 3; left ++){
     //   turnLeftAvoid(85,85);
